@@ -7,6 +7,7 @@ import Landing from "./components/landing";
 import Login from "./components/login";
 import Register from "./components/register";
 import Dashboard from "./components/dashboard";
+import AdminDashboard from "./components/adminDashboard";
 import Success from "./components/success";
 import PageNotFound from "./components/pageNotFound";
 
@@ -15,8 +16,9 @@ class App extends Component {
     return (
       <Router>
         <div className="App" style={{ minHeight: "100vh" }}>
-          <Route exact path="/" component={Dashboard} />
-          <Route exact path="/landing" component={Landing} />
+          <Route exact path="/user" component={Dashboard} />
+          <Route exact path="/admin" component={AdminDashboard} />
+          <Route exact path="/" component={Landing} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/success" component={Success} />
