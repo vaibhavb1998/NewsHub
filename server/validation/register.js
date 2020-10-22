@@ -11,16 +11,15 @@ module.exports = function validateRegisterInput(user) {
 
   // Email checks
   if (_.isEmpty(user.email)) {
-    errors.email = "Email field is required";
+    errors.msg = "Email field is required";
   } else if (!Validator.isEmail(user.email)) {
-    errors.email = "Email is invalid";
+    errors.msg = "Email is invalid";
   }
-
   // Password checks
-  if (_.isEmpty(user.password)) {
-    errors.password = "Password field is required";
-  } else if (!Validator.isLength(user.password, { min: 6 })) {
-    errors.password = "Password must be at least 6 characters";
+  else if (_.isEmpty(user.password)) {
+    errors.msg = "Password field is required";
+  } else if (false) {
+    errors.msg = "Password must be at least 6 characters";
   }
 
   return {

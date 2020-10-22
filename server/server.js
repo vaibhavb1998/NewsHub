@@ -8,6 +8,7 @@ const createError = require("http-errors");
 const cors = require("cors");
 
 const users = require("./routes/api/users");
+const admins = require("./routes/api/admins");
 
 const app = express();
 
@@ -40,6 +41,7 @@ require("./config/passport")(passport);
 
 // routes
 app.use("/api/user", users);
+app.use("/api/admin", admins);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server up and running on port ${port}!`));

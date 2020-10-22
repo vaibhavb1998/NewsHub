@@ -9,13 +9,11 @@ const Login = () => {
   let history = useHistory();
 
   const onFinish = values => {
-    // console.log('Received values of form: ', values);
-
     axios.post(`http://localhost:5000/api/user/login`, values)
     .then(res => {
       // console.log(res)
       message.success('Login Successful!!!');
-      history.push('/')
+      res.data.isAdmin ? history.push('/admin') : history.push('/user')
     })
     .catch(err => {
       // console.log(err.response.data.msg)
