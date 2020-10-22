@@ -15,6 +15,14 @@ const UserSchema = new Schema({
     type: String,
     require: true,
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  sourcesId: {
+    type: Array,
+    default: [],
+  },
 });
 
 module.exports = User = mongoose.model("user", UserSchema);

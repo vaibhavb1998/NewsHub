@@ -3,8 +3,6 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
-const passport = require("passport");
-const Validator = require("validator");
 
 // load input validation
 const validateRegisterInput = require("../../validation/register");
@@ -15,7 +13,6 @@ const User = require("../../models/User");
 
 // @route POST api/user/register
 // @desc Register user
-// @access Private to admin & issuer
 router.post("/register", (req, res) => {
   // form validation
   const { errors, isValid } = validateRegisterInput(req.body);
@@ -23,7 +20,7 @@ router.post("/register", (req, res) => {
   console.log(errors, isValid)
   // check validation
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json({ status: false, msg: errors.msg });
   }
 
   // find user by email in db
@@ -31,9 +28,8 @@ router.post("/register", (req, res) => {
     // check if user exists
     if (user) {
       return res.status(400).send({
-        status: "fail",
-        currentAuthority: "admin",
-        email: "Email already exists",
+        status: false,
+        msg: "Email already exists",
       });
     } else {
       const newUser = new User({
@@ -74,7 +70,7 @@ router.post("/login", (req, res) => {
 
   // Check validation
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json({ status: false, msg: errors.msg });
   }
 
   const email = req.body.email;
@@ -86,31 +82,19 @@ router.post("/login", (req, res) => {
   User.findOne({ email }).then((user) => {
     // check if user exists
     if (!user) {
-      return res.status(404).json({ emailnotfound: "Email not found" });
+      return res.status(404).json({ status: false, msg: "Email not found" });
     }
 
     // check password
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {
         // user matched
-        const payload = {
-          userid: user.id,
-          avatar:
-            "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png",
-          phone: user.phone,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          issuerCreatedBy: user.issuerCreatedBy,
-          investorCreatedBy: user.investorCreatedBy,
-        };
 
         console.log("login success");
 
         // create JWT payload
         // sign token
         jwt.sign(
-          payload,
           keys.secretOrKey,
           {
             expiresIn: 86400, // 1 day in seconds
@@ -118,20 +102,56 @@ router.post("/login", (req, res) => {
           (err, token) => {
             res.send({
               id: user._id,
-              success: true,
               token: "Bearer " + token,
-              status: "ok",
+              status: true,
               email: user.email,
+              isAdmin: user.isAdmin,
+              msg: "registration successful"
             });
           }
         );
       } else {
         return res
           .status(400)
-          .json({ passwordIncorrect: "Password is incorrect" });
+          .json({ status: false, msg: "Password is incorrect" });
       }
     });
   });
+});
+
+
+// @route get api/user/get-selected-source-list
+// @desc return selected source list by user
+router.get("/get-selected-source-list", (req, res) => {
+
+  User.find({ isAdmin: true })
+    .then((source) => {
+      if (source) {
+        res.json({ status: true, data: source });
+      } else {
+        res.json({ status: false, msg: "Issuances not found" });
+      }
+    })
+    .catch((err) => {
+      return res.status(500).send("Something went wrong");
+    });
+});
+
+// @route PUT api/user/set-selected-source-list
+// @desc set selected source list by user
+router.put("/set-selected-source-list", (req, res) => {
+  User.find({ isAdmin: true })
+    .updateOne({ $addToSet: { sourcesId: req.body } })
+    .then((source) => {
+      if (source) {
+        res.json({ status: true, data: source });
+      } else {
+        res.json({ status: false, msg: "Issuances not found" });
+      }
+    })
+    .catch((err) => {
+      return res.status(500).send("Something went wrong");
+    });
 });
 
 module.exports = router;
