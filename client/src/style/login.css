@@ -1,14 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;700&display=swap');
+
 .login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: url("https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg"), #F0F2F5;
   min-height: 100vh;
 }
 
-.login-page .login-form {
+.title-heading {
+  min-height: 30vh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-page .heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.login-page .sub-heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666
+}
+
+.login-page .login-page-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.login-page-form .login-form {
   width: 350px;
 }
 
-.login-page .login-form .login-form-button {
+.login-page-form .login-form .login-form-button {
   width: 100%;
 }

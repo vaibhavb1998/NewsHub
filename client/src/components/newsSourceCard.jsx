@@ -1,16 +1,11 @@
 import React, { useState } from 'react'
-import { Card } from 'antd';
+import { List, Avatar } from 'antd';
+import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 
-const { Meta } = Card;
 
 const NewsSourceCard = (props) => {
   return (
     <div>
-      <Card
-        hoverable
-      >
-        <Meta title={props.name} description={props.description} />
-      </Card>
     </div>
   );
 }

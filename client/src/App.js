@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
+
+// antd stylesheet
 import 'antd/dist/antd.css';
 
 // import Navbar from "./components/Navbar";
@@ -8,6 +10,10 @@ import Login from "./components/login";
 import Register from "./components/register";
 import Dashboard from "./components/dashboard";
 import AdminDashboard from "./components/adminDashboard";
+import UserNews from "./components/userNews";
+import AdminNews from "./components/adminNews";
+import AdminAddNews from "./components/adminAddNews";
+import AdminAddUser from "./components/adminAddUser";
 import Success from "./components/success";
 import PageNotFound from "./components/pageNotFound";
 
@@ -16,6 +22,10 @@ class App extends Component {
     return (
       <Router>
         <div className="App" style={{ minHeight: "100vh" }}>
+          <Route exact path="/user/news" component={UserNews} />
+          <Route exact path="/admin/add/news" component={AdminAddNews} />
+          <Route exact path="/admin/add/user" component={AdminAddUser} />
+          <Route exact path="/admin/news" component={AdminNews} />
           <Route exact path="/user" component={Dashboard} />
           <Route exact path="/admin" component={AdminDashboard} />
           <Route exact path="/" component={Landing} />
