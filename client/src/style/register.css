@@ -1,14 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;700&display=swap');
+
 .register-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: url("https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg"), #F0F2F5;
   min-height: 100vh;
 }
 
-.register-page .register-form {
+.title-heading {
+  min-height: 20vh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+}
+
+.register-page .heading {
+  font-family: 'Roboto', sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.register-page .sub-heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666
+}
+
+.register-page .register-page-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.register-page-form .register-form {
   width: 550px;
 }
 
 .register-form-button {
   width: 100%;
+}
+
+.heading .anticon svg {
+  width: 2em;
 }

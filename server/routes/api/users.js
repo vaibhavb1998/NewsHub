@@ -9,11 +9,14 @@ const validateRegisterInput = require("../../validation/register");
 const validateLoginInput = require("../../validation/login");
 
 // load user model
-const User = require("../../models/User");
+const User = require("../../models/user");
+const News = require("../../models/news");
 
 // @route POST api/user/register
 // @desc Register user
 router.post("/register", (req, res) => {
+  console.log("register api hit");
+
   // form validation
   const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -27,6 +30,7 @@ router.post("/register", (req, res) => {
   User.findOne({ email: req.body.email }).then((user) => {
     // check if user exists
     if (user) {
+      console.log('email already exists')
       return res.status(400).send({
         status: false,
         msg: "Email already exists",
@@ -37,8 +41,6 @@ router.post("/register", (req, res) => {
         email: req.body.email,
         password: req.body.password,
       });
-
-      console.log("register api hit");
 
       // hash password before saving in database
       bcrypt.genSalt(10, (err, salt) => {
@@ -151,6 +153,24 @@ router.put("/set-selected-source-list", (req, res) => {
     })
     .catch((err) => {
       return res.status(500).send("Something went wrong");
+    });
+});
+
+// @route GET api/user/news
+// @desc get news
+router.get("/news", (req, res) => {
+  const category = req.query.category === 'all-news' ? {} : req.query
+  console.log(category)
+  News.find(category)
+    .then((data) => {
+      if (data) {
+        res.json({ status: true, data });
+      } else {
+        res.json({ status: false, msg: "News not found" });
+      }
+    })
+    .catch((err) => {
+      return res.status(500).send(err, "Something went wrong");
     });
 });
 

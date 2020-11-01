@@ -1,0 +1,15 @@
+.news-page {
+  margin: 100px 100px;
+}
+
+.news-page .list {
+  margin-top: 50px;
+}
+
+.news-page .list-item {
+  padding: 50px 20px;
+}
+
+.news-page .page-menu {
+  display: flex;
+}
