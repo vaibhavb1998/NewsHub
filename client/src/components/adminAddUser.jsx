@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Form, Input, Button, Select, Typography } from 'antd';
+import { Layout, Menu, Form, Input, Button, Select, Typography, message } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -9,6 +9,7 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
+import axios from 'axios'
 import '../style/adminNews.css'
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -41,22 +42,19 @@ const AdminNews = () => {
 
   const [form] = Form.useForm();
 
-  const onGenderChange = value => {
-    switch (value) {
-      case 'male':
-        form.setFieldsValue({ note: 'Hi, man!' });
-        return;
-      case 'female':
-        form.setFieldsValue({ note: 'Hi, lady!' });
-        return;
-      case 'other':
-        form.setFieldsValue({ note: 'Hi there!' });
-        return;
-    }
-  };
+  const onFinish = (values) => {
+    // console.log('Received values of form: ', values);
 
-  const onFinish = values => {
-    console.log(values);
+    axios.post(`http://localhost:5000/api/admin/register/new-admin`, values)
+      .then(res => {
+        console.log(res)
+        message.success("Admin added successfully");
+        window.location.reload()
+      })
+      .catch(err => {
+        message.error(err.response.data.msg);
+        console.log(err)
+      })
   };
 
   const onReset = () => {
@@ -146,6 +144,15 @@ const AdminNews = () => {
                   required: true,
                   message: 'Please input user password!',
                 },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (!value || value.length > 7) {
+                      return Promise.resolve();
+                    }
+
+                    return Promise.reject('Password must be atleast 8 characters');
+                  },
+                }),
               ]}
               hasFeedback
             >

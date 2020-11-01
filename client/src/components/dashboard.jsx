@@ -62,7 +62,7 @@ const Dashboard = () => {
       <div className="page-menu">
         <Dropdown overlay={menu}>
           <Button>
-            Select source <AlignRightOutlined />
+            Select category <AlignRightOutlined />
           </Button>
         </Dropdown>
       </div>

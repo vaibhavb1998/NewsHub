@@ -130,6 +130,15 @@ const Register = () => {
                 required: true,
                 message: 'Please input your password!',
               },
+              () => ({
+                validator(rule, value) {
+                  if (!value || value.length > 7) {
+                    return Promise.resolve();
+                  }
+
+                  return Promise.reject('Password must be atleast 8 characters');
+                },
+              }),
             ]}
             hasFeedback
           >
@@ -166,13 +175,13 @@ const Register = () => {
             rules={[
               {
                 validator: (_, value) =>
-                  value ? Promise.resolve() : Promise.reject('Should accept agreement'),
+                  value ? Promise.resolve() : Promise.reject('Should accept terms & conditions'),
               },
             ]}
             {...tailFormItemLayout}
           >
             <Checkbox>
-              I have read the <a href="">agreement</a>
+              I have read the <a href="/terms-conditions" target="_blank">Terms & Conditions</a>
             </Checkbox>
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>

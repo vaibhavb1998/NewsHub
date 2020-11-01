@@ -15,6 +15,7 @@ import AdminNews from "./components/adminNews";
 import AdminAddNews from "./components/adminAddNews";
 import AdminAddUser from "./components/adminAddUser";
 import Success from "./components/success";
+import TermsConditions from "./components/termsConditions";
 import PageNotFound from "./components/pageNotFound";
 
 class App extends Component {
@@ -32,6 +33,7 @@ class App extends Component {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/success" component={Success} />
+          <Route exact path="/terms-conditions" component={TermsConditions} />
           <Route exact path="/page-not-found" component={PageNotFound} />
         </div>
       </Router>

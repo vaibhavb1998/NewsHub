@@ -13,7 +13,7 @@ const Login = () => {
       .then(res => {
         // console.log(res)
         message.success('Login Successful!!!');
-        res.data.isAdmin ? history.push('/admin') : history.push('/user')
+        res.data.isAdmin ? history.push('/admin/news') : history.push('/user/news')
       })
       .catch(err => {
         // console.log(err.response.data.msg)
@@ -42,7 +42,17 @@ const Login = () => {
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
+            rules={[
+              { required: true, message: 'Please input your Password!' },
+              ({ getFieldValue }) => ({
+                validator(rule, value) {
+                  if (!value || value.length > 7) {
+                    return Promise.resolve();
+                  }
+
+                  return Promise.reject('Password must be atleast 8 characters');
+                },
+              }),]}
           >
             <Input
               size="large"

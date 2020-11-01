@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Form, Button, Select, Typography, Skeleton, Dropdown, List, Modal } from 'antd';
+import { Layout, Menu, Form, Button, Select, Typography, Card, Dropdown, List, Modal, Image } from 'antd';
 import _, { set } from 'lodash'
 import {
   MenuUnfoldOutlined,
@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
+import '../style/userNews.css'
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -33,6 +34,7 @@ const UserNews = () => {
   const [collapsed, setCollapsed] = useState(false)
   const [logoText, setLogoText] = useState("NewsHub")
   const [modalVisible, setModalVisible] = useState(false)
+  const [modalData, setModalData] = useState({})
   let history = useHistory();
 
   const toggle = () => {
@@ -95,6 +97,11 @@ const UserNews = () => {
           Technology
       </a>
       </Menu.Item>
+      <Menu.Item key="politics">
+        <a target="_blank" >
+          Politics
+      </a>
+      </Menu.Item>
       <Menu.Item key="science">
         <a target="_blank" >
           Science
@@ -110,8 +117,15 @@ const UserNews = () => {
           Sports
       </a>
       </Menu.Item>
-    </Menu>
+    </Menu >
   );
+
+  const handleNewsClick = () => {
+    console.log(modalData)
+    if (!_.isEmpty(modalData)) {
+      setModalVisible(true)
+    }
+  }
 
   return (
     <Layout>
@@ -144,52 +158,54 @@ const UserNews = () => {
           <div>
             <Dropdown overlay={menu}>
               <Button style={{ marginBottom: "50px" }}>
-                Select source <AlignRightOutlined />
+                Select category <AlignRightOutlined />
               </Button>
             </Dropdown>
           </div>
           <List
-            itemLayout="vertical"
-            size="large"
+            grid={{ gutter: 16, column: 3 }}
             dataSource={news}
-            className="list"
             renderItem={item => (
               <List.Item
-                key={item.name}
-                className="list-item"
-                extra={
-                  !loading && (
-                    <img
-                      width={272}
-                      alt="logo"
-                      src={item.imageUrl ? item.imageUrl : "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"}
+                onClick={() => {
+                  setModalData(item)
+                  handleNewsClick()
+                }}>
+                <Card title={item.name}>
+                  <div>
+                    <Image
+                      width="100%"
+                      src={modalData.imageUrl}
+                      style={{ marginBottom: "15px" }}
                     />
-                  )
-                }
-              >
-                <Skeleton loading={loading} active avatar>
-                  <List.Item.Meta
-                    title={<a href={item.url} target="_blank">{item.name}</a>}
-                    description={item.description}
-                  />
-                  {item.content}
-                </Skeleton>
-                <br />
-                <Button type="link" href={item.url} target="_blank">Click here to read...</Button>
+                    {item.description}
+                  </div>
+                </Card>
               </List.Item>
             )}
-
           />
           <Modal
-            title="20px to Top"
-            style={{ top: 20 }}
+            title={<span style={{ fontSize: "24px" }}>{modalData.name}</span>}
             visible={modalVisible}
             onOk={() => setModalVisible(false)}
+            onCancel={() => setModalVisible(false)}
             okText="Close"
+            cancelText={false}
+            centered
+            maskClosable={true}
+            cancelButtonProps={{ style: { display: 'none' } }}
+            width="70vw"
           >
-            <p>some contents...</p>
-            <p>some contents...</p>
-            <p>some contents...</p>
+            <Image
+              width={300}
+              src={modalData.imageUrl}
+              style={{ marginBottom: "15px" }}
+            />
+            <div style={{ fontSize: "18px" }}>
+              <p>Name: {modalData.name}</p>
+              <p>Description: {modalData.description}</p>
+              <p>Content: {modalData.content}</p>
+            </div>
           </Modal>
         </Content>
         <Footer style={{ textAlign: 'center' }}>&copy; Copyright 2020 NewsHub</Footer>

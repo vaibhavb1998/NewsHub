@@ -796,7 +796,7 @@ module.exports = {
     {
       "id": "politico",
       "name": "Politico",
-      "description": "Political news about Congress, the White House, campaigns, lobbyists and issues.",
+      "description": "Politics news about Congress, the White House, campaigns, lobbyists and issues.",
       "url": "https://www.politico.com",
       "category": "general",
       "language": "en",
@@ -967,7 +967,7 @@ module.exports = {
     {
       "id": "the-hill",
       "name": "The Hill",
-      "description": "The Hill is a top US political website, read by the White House and more lawmakers than any other site -- vital for policy, politics and election campaigns.",
+      "description": "The Hill is a top US politics website, read by the White House and more lawmakers than any other site -- vital for policy, politics and election campaigns.",
       "url": "http://thehill.com",
       "category": "general",
       "language": "en",
@@ -985,7 +985,7 @@ module.exports = {
     {
       "id": "the-huffington-post",
       "name": "The Huffington Post",
-      "description": "The Huffington Post is a politically liberal American online news aggregator and blog that has both localized and international editions founded by Arianna Huffington, Kenneth Lerer, Andrew Breitbart, and Jonah Peretti, featuring columnists.",
+      "description": "The Huffington Post is a politicsly liberal American online news aggregator and blog that has both localized and international editions founded by Arianna Huffington, Kenneth Lerer, Andrew Breitbart, and Jonah Peretti, featuring columnists.",
       "url": "http://www.huffingtonpost.com",
       "category": "general",
       "language": "en",
@@ -1093,7 +1093,7 @@ module.exports = {
     {
       "id": "usa-today",
       "name": "USA Today",
-      "description": "Get the latest national, international, and political news at USATODAY.com.",
+      "description": "Get the latest national, international, and politics news at USATODAY.com.",
       "url": "http://www.usatoday.com/news",
       "category": "general",
       "language": "en",

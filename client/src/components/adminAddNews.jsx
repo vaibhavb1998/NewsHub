@@ -8,6 +8,7 @@ import {
   FileAddOutlined,
 } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
+import axios from 'axios'
 import '../style/adminNews.css'
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -42,6 +43,17 @@ const AdminNews = () => {
 
   const onFinish = values => {
     console.log(values);
+
+    axios.post(`http://localhost:5000/api/admin/create/news`, values)
+      .then(res => {
+        console.log(res)
+        message.success("News added successfully");
+        window.location.reload()
+      })
+      .catch(err => {
+        message.error(err.response.data.msg);
+        console.log(err)
+      })
   };
 
   const onReset = () => {
@@ -134,6 +146,7 @@ const AdminNews = () => {
                 <Option value="national">National</Option>
                 <Option value="international">International</Option>
                 <Option value="technology">Technology</Option>
+                <Option value="politics">Politics</Option>
                 <Option value="science">Science</Option>
                 <Option value="devotional">Devotional</Option>
                 <Option value="sports">Sports</Option>
@@ -177,6 +190,25 @@ const AdminNews = () => {
               hasFeedback
             >
               <Input.TextArea size="large" placeholder="Enter news content" rows="8" maxlength="5000" />
+            </Form.Item>
+
+            <Form.Item
+              name="imageUrl"
+              label={
+                <span>
+                  Image Url
+              </span>
+              }
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter image url!',
+                  whitespace: true,
+                },
+              ]}
+              hasFeedback
+            >
+              <Input size="large" placeholder="Enter image url" />
             </Form.Item>
 
             {/* <Form.Item
