@@ -21,8 +21,11 @@ const NewsSchema = new Schema({
   },
   imageUrl: {
     type: String,
-    require: false,
     default: '',
+  },
+  language: {
+    type: String,
+    default: 'english',
   },
   category: {
     type: String,
@@ -36,6 +39,10 @@ const NewsSchema = new Schema({
     type: Number,
     default: 0,
   },
+  date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = News = mongoose.model("news", NewsSchema);

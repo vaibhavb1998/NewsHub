@@ -3,6 +3,10 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
+const upload = require("express-fileupload");
+const fs = require("fs");
+
+router.use(upload());
 
 // load input validation
 const validateRegisterInput = require("../../validation/register");
@@ -11,6 +15,9 @@ const validateLoginInput = require("../../validation/login");
 // load user model
 const Admin = require("../../models/admin");
 const News = require("../../models/news");
+
+// setting file upload data
+let fileUpload;
 
 // @route get api/admin/get-selected-source-list
 // @desc return selected source list by admin
@@ -98,29 +105,56 @@ router.post("/register/new-admin", (req, res) => {
   });
 });
 
-// @route POST api/admin/register
-// @desc Register new admin
+router.post("/create/upload", (req, res) => {
+  fileUpload = req.files
+  res.status(200).send({
+    status: "ok",
+  });
+})
+
+// @route POST api/create/news
+// @desc create news
 router.post("/create/news", (req, res) => {
   console.log("create news api hit");
+  let imageUrl = ''
 
-  const newNews = new News({
-    name: req.body.name,
-    category: req.body.category,
-    description: req.body.description,
-    content: req.body.content,
-    imageUrl: req.body.imageUrl,
-  });
+  const file = fileUpload.file
+  const filename = file.name
 
-  newNews
-    .save()
-    .then((response) => {
-      console.log("News added successfully");
-      console.log(response);
-      res.status(200).send({
-        status: "ok",
+  file.mv("./upload/" + filename, (err) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json(errors);
+    } else {
+      console.log('file moved successfully')
+      imageUrl = filename;
+
+      console.log('process', process.cwd() + "/../../upload/" + filename)
+
+      console.log(imageUrl)
+      const newNews = new News({
+        name: req.body.name,
+        category: req.body.category,
+        language: req.body.language,
+        description: req.body.description,
+        content: req.body.content,
+        imageUrl,
+        author: req.body.author,
+        date: req.body.date,
       });
-    })
-    .catch((err) => console.log(err));
+
+      newNews
+        .save()
+        .then((response) => {
+          console.log("News added successfully");
+          console.log(response);
+          res.status(200).send({
+            status: "ok",
+          });
+        })
+        .catch((err) => console.log(err));
+    }
+  })
 });
 
 // @route DELETE api/admin/delete/news

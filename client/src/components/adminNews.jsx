@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Form, Button, Select, Typography, Card, Image, Dropdown, List, Modal, message } from 'antd';
+import { Layout, Menu, Form, Button, Select, Typography, Card, Image, Dropdown, List, Modal, message, DatePicker } from 'antd';
 import _, { set } from 'lodash'
 import {
   MenuUnfoldOutlined,
@@ -14,7 +14,7 @@ import axios from 'axios'
 import '../style/userNews.css'
 
 const { Header, Sider, Content, Footer } = Layout;
-
+const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -25,11 +25,22 @@ const layout = {
 const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
+const rangeConfig = {
+  rules: [
+    {
+      type: 'array',
+      required: true,
+      message: 'Please select time!',
+    },
+  ],
+};
 
-const AdminNews = () => {
+const AdminNews = (props) => {
 
   const [news, setNews] = useState([])
   const [category, setCategory] = useState('all-news')
+  const [language, setLanguage] = useState('english')
+  const [date, setDate] = useState([])
   const [collapsed, setCollapsed] = useState(false)
   const [logoText, setLogoText] = useState("NewsHub")
   const [modalVisible, setModalVisible] = useState(false)
@@ -48,7 +59,7 @@ const AdminNews = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/user/news?category=${category}`)
+    axios.get(`http://localhost:5000/api/user/news?category=${category}&language=${language}&date=${date}`)
       .then(res => {
         setNews(res.data.data)
         console.log(res.data)
@@ -56,11 +67,20 @@ const AdminNews = () => {
       .catch(err => {
         console.log(err)
       })
-  }, [category])
+  }, [category, language, date])
 
-  const handleMenuClick = (e) => {
+  const handleCategoryChange = (e) => {
     console.log(e.key)
     setCategory(e.key)
+  }
+
+  const handleLanguageChange = (e) => {
+    console.log(e.key)
+    setLanguage(e.key)
+  }
+
+  const handleDateChange = (value, dateString) => {
+    setDate(value)
   }
 
   const onFinish = values => {
@@ -71,8 +91,8 @@ const AdminNews = () => {
     form.resetFields();
   };
 
-  const menu = (
-    <Menu onClick={handleMenuClick} defaultActiveFirst>
+  const categoryMenu = (
+    <Menu onClick={handleCategoryChange} defaultActiveFirst>
       <Menu.Item key="all-news">
         <a target="_blank" >
           All News
@@ -116,24 +136,44 @@ const AdminNews = () => {
     </Menu>
   );
 
+  const languageMenu = (
+    <Menu onClick={handleLanguageChange} defaultActiveFirst>
+      <Menu.Item key="english">
+        <a target="_blank" >
+          English
+      </a>
+      </Menu.Item>
+      <Menu.Item key="hindi">
+        <a target="_blank" >
+          Hindi
+      </a>
+      </Menu.Item>
+      <Menu.Item key="kannada">
+        <a target="_blank" >
+          Kannada
+      </a>
+      </Menu.Item>
+    </Menu>
+  );
+
   const handleNewsClick = () => {
-    console.log(modalData)
-    if (!_.isEmpty(modalData)) {
-      setModalVisible(true)
-    }
+    console.log('here 5', modalData)
+    props.history.push('/news', {
+      newsData: modalData,
+    })
   }
 
   const handleNewsDelete = () => {
     if (!_.isEmpty(modalData)) {
       axios.delete(`http://localhost:5000/api/admin/delete/news?newsId=${modalData._id}`)
-      .then(res => {
-        message.success("News deleted successfully")
-        window.location.reload()
-      })
-      .catch(err => {
-        console.log(err)
-        message.error("Some error happened")
-      })
+        .then(res => {
+          message.success("News deleted successfully")
+          window.location.reload()
+        })
+        .catch(err => {
+          console.log(err)
+          message.error("Some error happened")
+        })
     }
   }
 
@@ -171,12 +211,23 @@ const AdminNews = () => {
           }}
         >
           <Title level={2} style={{ marginBottom: "20px" }}>News</Title>
-          <div>
-            <Dropdown overlay={menu}>
+          <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+            <Dropdown overlay={categoryMenu}>
               <Button style={{ marginBottom: "50px" }}>
                 Select category <AlignRightOutlined />
               </Button>
             </Dropdown>
+
+            <Dropdown overlay={languageMenu}>
+              <Button style={{ marginBottom: "50px" }}>
+                Select language <AlignRightOutlined />
+              </Button>
+            </Dropdown>
+
+            <RangePicker onChange={handleDateChange} format='DD/MM/YYYY' style={{ alignSelf: "end" }} />
+          </div>
+          <div style={{ marginBottom: "50px" }}>
+            <b>Current selection:</b> Category: {category}, Language: {language}
           </div>
           <List
             grid={{ gutter: 16, column: 3 }}
@@ -184,14 +235,15 @@ const AdminNews = () => {
             renderItem={item => (
               <List.Item
                 onClick={() => {
-                  setModalData(item)
-                  handleNewsClick()
+                  props.history.push('/news', {
+                    newsData: item,
+                  })
                 }}>
-                <Card title={item.name}>
+                <Card title={item.name} style={{ height: "400px" }}>
                   <div>
                     <Image
                       width="100%"
-                      src={item.imageUrl}
+                      src={require(`../../../server/upload/${item.imageUrl}`)}
                       style={{ marginBottom: "15px" }}
                     />
                     {item.description}

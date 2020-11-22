@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Form, Input, Button, Select, Typography, Upload, message } from 'antd';
+import { Layout, Menu, Form, Input, Button, Select, Radio, Typography, Upload, message, DatePicker } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UsergroupAddOutlined,
   FileSyncOutlined,
   FileAddOutlined,
+  UploadOutlined,
 } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
 import '../style/adminNews.css'
 
 const { Header, Sider, Content, Footer } = Layout;
-
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -28,6 +28,7 @@ const AdminNews = () => {
 
   const [collapsed, setCollapsed] = useState(false)
   const [logoText, setLogoText] = useState("NewsHub")
+  const [fileList, setFileList] = useState({})
   let history = useHistory();
 
   const toggle = () => {
@@ -44,6 +45,8 @@ const AdminNews = () => {
   const onFinish = values => {
     console.log(values);
 
+    values.files = fileList
+
     axios.post(`http://localhost:5000/api/admin/create/news`, values)
       .then(res => {
         console.log(res)
@@ -58,24 +61,6 @@ const AdminNews = () => {
 
   const onReset = () => {
     form.resetFields();
-  };
-
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
   };
 
   return (
@@ -119,28 +104,42 @@ const AdminNews = () => {
             scrollToFirstError>
             <Form.Item
               name="name"
-              label={
-                <span>
-                  Title
-              </span>
-              }
+              label={<span>Title</span>}
               rules={[
                 {
-                  required: true,
+
                   message: 'Please enter the news title!',
                   whitespace: true,
                 },
               ]}
               hasFeedback
+              required
             >
               <Input size="large" placeholder="Enter news title" />
+            </Form.Item>
+
+            <Form.Item
+              name="author"
+              label={<span>Author</span>}
+              rules={[
+                {
+
+                  message: 'Please enter author name!',
+                  whitespace: true,
+                },
+              ]}
+              hasFeedback
+              required
+            >
+              <Input size="large" placeholder="Enter author name" />
             </Form.Item>
 
             <Form.Item
               name="category"
               label="Category"
               hasFeedback
-              rules={[{ required: true, message: 'Please select news category!' }]}
+              rules={[{ message: 'Please select news category!' }]}
+              required
             >
               <Select size="large" placeholder="Select a category">
                 <Option value="national">National</Option>
@@ -155,6 +154,20 @@ const AdminNews = () => {
             </Form.Item>
 
             <Form.Item
+              name="language"
+              label="Language"
+              hasFeedback
+              required
+              rules={[{ message: 'Please select news language!' }]}
+            >
+              <Radio.Group>
+                <Radio value="english">English</Radio>
+                <Radio value="hindi">Hindi</Radio>
+                <Radio value="kannada">Kannada</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
               name="description"
               label={
                 <span>
@@ -163,12 +176,12 @@ const AdminNews = () => {
               }
               rules={[
                 {
-                  required: true,
+
                   message: 'Please enter brief description!',
                   whitespace: true,
                 },
               ]}
-              hasFeedback
+              required
             >
               <Input.TextArea size="large" placeholder="Enter brief description" rows="2" maxlength="80" />
             </Form.Item>
@@ -182,18 +195,26 @@ const AdminNews = () => {
               }
               rules={[
                 {
-                  required: true,
+
                   message: 'Please enter news content!',
                   whitespace: true,
                 },
               ]}
-              hasFeedback
+              required
             >
-              <Input.TextArea size="large" placeholder="Enter news content" rows="8" maxlength="5000" />
+              <Input.TextArea defaultValue="content" size="large" placeholder="Enter news content" rows="8" maxlength="5000" />
             </Form.Item>
 
+            <Form.Item label="DatePicker"
+              required
+              hasFeedback
+              name="date"
+            >
+              <DatePicker size="large" format='DD/MM/YYYY' />
+            </Form.Item>
+            {/* 
             <Form.Item
-              name="imageUrl"
+              name"
               label={
                 <span>
                   Image Url
@@ -201,7 +222,7 @@ const AdminNews = () => {
               }
               rules={[
                 {
-                  required: true,
+                  
                   message: 'Please enter image url!',
                   whitespace: true,
                 },
@@ -209,27 +230,32 @@ const AdminNews = () => {
               hasFeedback
             >
               <Input size="large" placeholder="Enter image url" />
+            </Form.Item> */}
+
+            <Form.Item
+              name="image"
+              label={<span>
+                Image
+                </span>
+              }
+              required
+            >
+              <Upload
+                action="http://localhost:5000/api/admin/create/upload"
+                listType="picture"
+                accept=".png, .jpeg, .jpg"
+              >
+                <Button icon={<UploadOutlined />}>Upload</Button>
+              </Upload>
             </Form.Item>
 
-            {/* <Form.Item
-            name="imageUrl"
-              label={
-                <span>
-                  Image
-              </span>
-              }
-              hasFeedback>
-              <Upload {...props}>
-                <Button>Click to Upload</Button>
-              </Upload>
-            </Form.Item> */}
             <Form.Item {...tailLayout}>
               <Button type="primary" htmlType="submit">
                 Submit
-        </Button> &nbsp;
+              </Button> &nbsp;
               <Button htmlType="button" onClick={onReset}>
                 Reset
-        </Button>
+              </Button>
             </Form.Item>
           </Form>
         </Content>

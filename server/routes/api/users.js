@@ -11,6 +11,7 @@ const validateLoginInput = require("../../validation/login");
 // load user model
 const User = require("../../models/user");
 const News = require("../../models/news");
+const e = require("express");
 
 // @route POST api/user/register
 // @desc Register user
@@ -159,9 +160,26 @@ router.put("/set-selected-source-list", (req, res) => {
 // @route GET api/user/news
 // @desc get news
 router.get("/news", (req, res) => {
-  const category = req.query.category === 'all-news' ? {} : req.query
-  console.log(category)
-  News.find(category)
+
+  let initialDate = ''
+  let finalDate = ''
+
+  if (req.query.category === 'all-news') {
+    delete req.query.category
+  }
+
+  let date;
+
+  if (req.query.date === '') {
+    delete req.query.date
+  } else {
+    date = req.query.date.split(',');
+    initialDate = date[0]
+    finalDate = date[1]
+    req.query.date = { $gte: initialDate, $lt: finalDate }
+  }
+
+  News.find(req.query)
     .then((data) => {
       if (data) {
         res.json({ status: true, data });
