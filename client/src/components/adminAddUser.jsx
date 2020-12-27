@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Form, Input, Button, Select, Typography, message } from 'antd';
+import { Layout, Menu, Form, Input, Button, Select, Dropdown, Typography, message } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -7,6 +7,8 @@ import {
   FileSyncOutlined,
   FileAddOutlined,
   QuestionCircleOutlined,
+  DownOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
@@ -39,6 +41,14 @@ const AdminNews = () => {
     }
     setCollapsed(!collapsed)
   };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <a href="/login">Logout</a>
+      </Menu.Item>
+    </Menu>
+  );
 
   const [form] = Form.useForm();
 
@@ -85,6 +95,13 @@ const AdminNews = () => {
             className: 'trigger',
             onClick: toggle,
           })}
+          <div style={{ float: "right", paddingRight: "40px", marginTop: "10px" }}>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+              <UserOutlined style={{ color: "white", fontSize: "30px" }} /><DownOutlined style={{ color: "white", fontSize: "15px" }} />
+              </a>
+            </Dropdown>
+          </div>
         </Header>
         <Content
           className="site-layout-background"

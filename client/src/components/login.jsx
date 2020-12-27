@@ -44,15 +44,7 @@ const Login = () => {
             name="password"
             rules={[
               { required: true, message: 'Please input your Password!' },
-              ({ getFieldValue }) => ({
-                validator(rule, value) {
-                  if (!value || value.length > 7) {
-                    return Promise.resolve();
-                  }
-
-                  return Promise.reject('Password must be atleast 8 characters');
-                },
-              }),]}
+            ]}
           >
             <Input
               size="large"

@@ -11,7 +11,7 @@ import Register from "./components/register";
 import Dashboard from "./components/dashboard";
 import AdminDashboard from "./components/adminDashboard";
 import UserNews from "./components/userNews";
-import AdminNews from "./components/adminNews";
+import NewsList from "./components/newsList";
 import NewsPage from "./components/newsPage";
 import AdminAddNews from "./components/adminAddNews";
 import AdminAddUser from "./components/adminAddUser";
@@ -24,10 +24,10 @@ class App extends Component {
     return (
       <Router>
         <div className="App" style={{ minHeight: "100vh" }}>
-          <Route exact path="/user/news" component={UserNews} />
+          <Route exact path="/user/news" component={NewsList} />
           <Route exact path="/admin/add/news" component={AdminAddNews} />
           <Route exact path="/admin/add/user" component={AdminAddUser} />
-          <Route exact path="/admin/news" component={AdminNews} />
+          <Route exact path="/admin/news" component={NewsList} />
           <Route exact path="/news" component={NewsPage} />
           <Route exact path="/user" component={Dashboard} />
           <Route exact path="/admin" component={AdminDashboard} />

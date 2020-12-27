@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Form, Input, Button, Select, Radio, Typography, Upload, message, DatePicker } from 'antd';
+import { Layout, Menu, Form, Input, Button, Select, Radio, Typography, Upload, message, DatePicker, Dropdown } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -7,6 +7,8 @@ import {
   FileSyncOutlined,
   FileAddOutlined,
   UploadOutlined,
+  DownOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
@@ -54,7 +56,9 @@ const AdminNews = () => {
         window.location.reload()
       })
       .catch(err => {
-        message.error(err.response.data.msg);
+        if (err.response) {
+          message.error(err.response.data.msg);
+        }
         console.log(err)
       })
   };
@@ -62,6 +66,14 @@ const AdminNews = () => {
   const onReset = () => {
     form.resetFields();
   };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <a href="/login">Logout</a>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <Layout>
@@ -87,6 +99,13 @@ const AdminNews = () => {
             className: 'trigger',
             onClick: toggle,
           })}
+          <div style={{ float: "right", paddingRight: "40px", marginTop: "10px" }}>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                <UserOutlined style={{ color: "white", fontSize: "30px" }} /><DownOutlined style={{ color: "white", fontSize: "15px" }} />
+              </a>
+            </Dropdown>
+          </div>
         </Header>
         <Content
           className="site-layout-background"
@@ -202,7 +221,7 @@ const AdminNews = () => {
               ]}
               required
             >
-              <Input.TextArea defaultValue="content" size="large" placeholder="Enter news content" rows="8" maxlength="5000" />
+              <Input.TextArea size="large" placeholder="Enter news content" rows="8" maxlength="5000" />
             </Form.Item>
 
             <Form.Item label="DatePicker"

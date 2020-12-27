@@ -7,7 +7,9 @@ import {
   UsergroupAddOutlined,
   FileSyncOutlined,
   FileAddOutlined,
-  AlignRightOutlined
+  AlignRightOutlined,
+  DownOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
@@ -145,6 +147,13 @@ const UserNews = () => {
             className: 'trigger',
             onClick: toggle,
           })}
+          <div style={{ float: "right", paddingRight: "40px", marginTop: "10px" }}>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+              <UserOutlined style={{ color: "white", fontSize: "30px" }} /><DownOutlined style={{ color: "white", fontSize: "15px" }} />
+              </a>
+            </Dropdown>
+          </div>
         </Header>
         <Content
           className="site-layout-background"
