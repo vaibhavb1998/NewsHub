@@ -45,7 +45,7 @@ const menu = (
   </Menu>
 );
 
-const NewsList = (props) => {
+const AdminNewsList = (props) => {
 
   const [news, setNews] = useState([])
   const [category, setCategory] = useState('all-news')
@@ -120,7 +120,7 @@ const NewsList = (props) => {
       </Menu.Item>
       <Menu.Item key="technology">
         <a target="_blank" >
-          Science & Technology
+        Science & Technology
       </a>
       </Menu.Item>
       <Menu.Item key="politics">
@@ -163,7 +163,7 @@ const NewsList = (props) => {
 
   const handleNewsClick = () => {
     console.log('here 5', modalData)
-    props.history.push('/news-page', {
+    props.history.push('/admin/news-page', {
       newsData: modalData,
     })
   }
@@ -189,8 +189,14 @@ const NewsList = (props) => {
           {logoText}
         </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" icon={<FileSyncOutlined />} onClick={() => history.push('/user/news')}>
-            News
+          <Menu.Item key="1" icon={<FileSyncOutlined />} onClick={() => history.push('/admin/news')}>
+            Manage News
+          </Menu.Item>
+          <Menu.Item key="2" icon={<FileAddOutlined />} onClick={() => history.push('/admin/add/news')}>
+            Add News
+          </Menu.Item>
+          <Menu.Item key="3" icon={<UsergroupAddOutlined />} onClick={() => history.push('/admin/add/user')}>
+            Create New Admin
           </Menu.Item>
         </Menu>
       </Sider>
@@ -241,7 +247,7 @@ const NewsList = (props) => {
             renderItem={item => (
               <List.Item
                 onClick={() => {
-                  props.history.push('/news-page', {
+                  props.history.push('/admin/news-page', {
                     newsData: item,
                   })
                 }}>
@@ -283,4 +289,4 @@ const NewsList = (props) => {
   );
 }
 
-export default NewsList;
+export default AdminNewsList;

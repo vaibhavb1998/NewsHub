@@ -163,9 +163,8 @@ const AdminNews = () => {
               <Select size="large" placeholder="Select a category">
                 <Option value="national">National</Option>
                 <Option value="international">International</Option>
-                <Option value="technology">Technology</Option>
+                <Option value="technology">Science & Technology</Option>
                 <Option value="politics">Politics</Option>
-                <Option value="science">Science</Option>
                 <Option value="devotional">Devotional</Option>
                 <Option value="sports">Sports</Option>
                 <Option value="others">Other</Option>

@@ -12,7 +12,9 @@ import Dashboard from "./components/dashboard";
 import AdminDashboard from "./components/adminDashboard";
 import UserNews from "./components/userNews";
 import NewsList from "./components/newsList";
+import AdminNewsList from "./components/adminNewsList";
 import NewsPage from "./components/newsPage";
+import AdminNewsPage from "./components/adminNewsPage"
 import AdminAddNews from "./components/adminAddNews";
 import AdminAddUser from "./components/adminAddUser";
 import Success from "./components/success";
@@ -27,8 +29,9 @@ class App extends Component {
           <Route exact path="/user/news" component={NewsList} />
           <Route exact path="/admin/add/news" component={AdminAddNews} />
           <Route exact path="/admin/add/user" component={AdminAddUser} />
-          <Route exact path="/admin/news" component={NewsList} />
-          <Route exact path="/news" component={NewsPage} />
+          <Route exact path="/admin/news" component={AdminNewsList} />
+          <Route exact path="/admin/news-page" component={AdminNewsPage} />
+          <Route exact path="/news-page" component={NewsPage} />
           <Route exact path="/user" component={Dashboard} />
           <Route exact path="/admin" component={AdminDashboard} />
           <Route exact path="/" component={Landing} />

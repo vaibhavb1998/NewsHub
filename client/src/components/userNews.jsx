@@ -1,6 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Form, Button, Select, Typography, Card, Dropdown, List, Modal, Image } from 'antd';
-import _, { set } from 'lodash'
+import React, { useState, useEffect } from "react";
+import {
+  Layout,
+  Menu,
+  Form,
+  Button,
+  Select,
+  Typography,
+  Card,
+  Dropdown,
+  List,
+  Modal,
+  Image,
+} from "antd";
+import _, { set } from "lodash";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -10,10 +22,10 @@ import {
   AlignRightOutlined,
   DownOutlined,
   UserOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
-import axios from 'axios'
-import '../style/userNews.css'
+import axios from "axios";
+import "../style/userNews.css";
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -29,47 +41,47 @@ const tailLayout = {
 };
 
 const UserNews = () => {
-
-  const [news, setNews] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [category, setCategory] = useState('all-news')
-  const [collapsed, setCollapsed] = useState(false)
-  const [logoText, setLogoText] = useState("NewsHub")
-  const [modalVisible, setModalVisible] = useState(false)
-  const [modalData, setModalData] = useState({})
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState("all-news");
+  const [collapsed, setCollapsed] = useState(false);
+  const [logoText, setLogoText] = useState("NewsHub");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalData, setModalData] = useState({});
   let history = useHistory();
 
   const toggle = () => {
     if (!collapsed) {
-      setLogoText("NH")
+      setLogoText("NH");
     } else {
-      setLogoText("NewsHub")
+      setLogoText("NewsHub");
     }
-    setCollapsed(!collapsed)
+    setCollapsed(!collapsed);
   };
 
   const [form] = Form.useForm();
 
   useEffect(() => {
-    setLoading(true)
-    axios.get(`http://localhost:5000/api/user/news?category=${category}`)
-      .then(res => {
-        setNews(res.data.data)
-        console.log(res.data)
-        setLoading(false)
+    setLoading(true);
+    axios
+      .get(`http://localhost:5000/api/user/news?category=${category}`)
+      .then((res) => {
+        setNews(res.data.data);
+        console.log(res.data);
+        setLoading(false);
       })
-      .catch(err => {
-        console.log(err)
-        setLoading(false)
-      })
-  }, [category])
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, [category]);
 
   const handleMenuClick = (e) => {
-    console.log(e.key)
-    setCategory(e.key)
-  }
+    console.log(e.key);
+    setCategory(e.key);
+  };
 
-  const onFinish = values => {
+  const onFinish = (values) => {
     console.log(values);
   };
 
@@ -80,77 +92,69 @@ const UserNews = () => {
   const menu = (
     <Menu onClick={handleMenuClick} defaultActiveFirst>
       <Menu.Item key="all-news">
-        <a target="_blank" >
-          All News
-      </a>
+        <a target="_blank">All News</a>
       </Menu.Item>
       <Menu.Item key="national">
-        <a target="_blank" >
-          National
-      </a>
+        <a target="_blank">National</a>
       </Menu.Item>
       <Menu.Item key="international">
-        <a target="_blank" >
-          International
-      </a>
+        <a target="_blank">International</a>
       </Menu.Item>
       <Menu.Item key="technology">
-        <a target="_blank" >
-          Technology
-      </a>
+        <a target="_blank">Science & Technology</a>
       </Menu.Item>
       <Menu.Item key="politics">
-        <a target="_blank" >
-          Politics
-      </a>
-      </Menu.Item>
-      <Menu.Item key="science">
-        <a target="_blank" >
-          Science
-      </a>
+        <a target="_blank">Politics</a>
       </Menu.Item>
       <Menu.Item key="devotional">
-        <a target="_blank" >
-          Devotional
-      </a>
+        <a target="_blank">Devotional</a>
       </Menu.Item>
       <Menu.Item key="sports">
-        <a target="_blank" >
-          Sports
-      </a>
+        <a target="_blank">Sports</a>
       </Menu.Item>
-    </Menu >
+    </Menu>
   );
 
   const handleNewsClick = () => {
-    console.log(modalData)
+    console.log(modalData);
     if (!_.isEmpty(modalData)) {
-      setModalVisible(true)
+      setModalVisible(true);
     }
-  }
+  };
 
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo">
-          {logoText}
-        </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" icon={<FileSyncOutlined />} onClick={() => history.push('/user/news')}>
+        <div className="logo">{logoText}</div>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+          <Menu.Item
+            key="1"
+            icon={<FileSyncOutlined />}
+            onClick={() => history.push("/user/news")}
+          >
             News
           </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }}>
-          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
-            onClick: toggle,
-          })}
-          <div style={{ float: "right", paddingRight: "40px", marginTop: "10px" }}>
-            <Dropdown overlay={menu} trigger={['click']}>
-              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-              <UserOutlined style={{ color: "white", fontSize: "30px" }} /><DownOutlined style={{ color: "white", fontSize: "15px" }} />
+          {React.createElement(
+            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+            {
+              className: "trigger",
+              onClick: toggle,
+            }
+          )}
+          <div
+            style={{ float: "right", paddingRight: "40px", marginTop: "10px" }}
+          >
+            <Dropdown overlay={menu} trigger={["click"]}>
+              <a
+                className="ant-dropdown-link"
+                onClick={(e) => e.preventDefault()}
+              >
+                <UserOutlined style={{ color: "white", fontSize: "30px" }} />
+                <DownOutlined style={{ color: "white", fontSize: "15px" }} />
               </a>
             </Dropdown>
           </div>
@@ -158,12 +162,14 @@ const UserNews = () => {
         <Content
           className="site-layout-background"
           style={{
-            margin: '24px 16px',
+            margin: "24px 16px",
             padding: 24,
             minHeight: 280,
           }}
         >
-          <Title level={2} style={{ marginBottom: "20px" }}>News</Title>
+          <Title level={2} style={{ marginBottom: "20px" }}>
+            News
+          </Title>
           <div>
             <Dropdown overlay={menu}>
               <Button style={{ marginBottom: "50px" }}>
@@ -174,12 +180,13 @@ const UserNews = () => {
           <List
             grid={{ gutter: 16, column: 3 }}
             dataSource={news}
-            renderItem={item => (
+            renderItem={(item) => (
               <List.Item
                 onClick={() => {
-                  setModalData(item)
-                  handleNewsClick()
-                }}>
+                  setModalData(item);
+                  handleNewsClick();
+                }}
+              >
                 <Card title={item.name}>
                   <div>
                     <Image
@@ -202,7 +209,7 @@ const UserNews = () => {
             cancelText={false}
             centered
             maskClosable={true}
-            cancelButtonProps={{ style: { display: 'none' } }}
+            cancelButtonProps={{ style: { display: "none" } }}
             width="70vw"
           >
             <Image
@@ -217,10 +224,12 @@ const UserNews = () => {
             </div>
           </Modal>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>&copy; Copyright 2020 NewsHub</Footer>
+        <Footer style={{ textAlign: "center" }}>
+          &copy; Copyright 2020 NewsHub
+        </Footer>
       </Layout>
-    </Layout >
+    </Layout>
   );
-}
+};
 
 export default UserNews;
