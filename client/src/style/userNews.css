@@ -1,6 +1,6 @@
 .ant-card-body {
-  max-height: 360px;
-  min-height: 360px;
+  max-height: 320px;
+  min-height: 320px;
   overflow: hidden;
   padding-bottom: 30px;
 }

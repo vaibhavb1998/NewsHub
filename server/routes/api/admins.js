@@ -22,7 +22,6 @@ let fileUpload;
 // @route get api/admin/get-selected-source-list
 // @desc return selected source list by admin
 router.get("/get-selected-source-list", (req, res) => {
-
   Admin.find()
     .then((source) => {
       if (source) {
@@ -39,7 +38,6 @@ router.get("/get-selected-source-list", (req, res) => {
 // @route PUT api/admin/set-selected-source-list
 // @desc set selected source list by admin
 router.get("/set-selected-source-list", (req, res) => {
-
   SelectedNewsSource.find()
     .then((source) => {
       if (source) {
@@ -61,7 +59,7 @@ router.post("/register/new-admin", (req, res) => {
   // form validation
   const { errors, isValid } = validateRegisterInput(req.body);
 
-  console.log(errors, isValid)
+  console.log(errors, isValid);
   // check validation
   if (!isValid) {
     return res.status(400).json({ status: false, msg: errors.msg });
@@ -71,7 +69,7 @@ router.post("/register/new-admin", (req, res) => {
   User.findOne({ email: req.body.email }).then((user) => {
     // check if user exists
     if (user) {
-      console.log('email already exists')
+      console.log("email already exists");
       return res.status(400).send({
         status: false,
         msg: "Email already exists",
@@ -106,32 +104,32 @@ router.post("/register/new-admin", (req, res) => {
 });
 
 router.post("/create/upload", (req, res) => {
-  fileUpload = req.files
+  fileUpload = req.files;
   res.status(200).send({
     status: "ok",
   });
-})
+});
 
 // @route POST api/create/news
 // @desc create news
 router.post("/create/news", (req, res) => {
   console.log("create news api hit");
-  let imageUrl = ''
+  let imageUrl = "";
 
-  const file = fileUpload.file
-  const filename = file.name
+  const file = fileUpload.file;
+  const filename = file.name;
 
   file.mv("./upload/" + filename, (err) => {
     if (err) {
       console.log(err);
       return res.status(400).json(errors);
     } else {
-      console.log('file moved successfully')
+      console.log("file moved successfully");
       imageUrl = filename;
 
-      console.log('process', process.cwd() + "/../../upload/" + filename)
+      console.log("process", process.cwd() + "/../../upload/" + filename);
 
-      console.log(imageUrl)
+      console.log(imageUrl);
       const newNews = new News({
         name: req.body.name,
         category: req.body.category,
@@ -154,7 +152,7 @@ router.post("/create/news", (req, res) => {
         })
         .catch((err) => console.log(err));
     }
-  })
+  });
 });
 
 // @route DELETE api/admin/delete/news
@@ -162,10 +160,9 @@ router.post("/create/news", (req, res) => {
 router.delete("/delete/news", (req, res) => {
   console.log("Delete news api hit");
 
-  console.log(req.query.newsId)
+  console.log(req.query.newsId);
 
-  News
-    .remove({ _id: req.query.newsId })
+  News.remove({ _id: req.query.newsId })
     .then((response) => {
       console.log("News deleted successfully");
       console.log(response);
@@ -174,6 +171,30 @@ router.delete("/delete/news", (req, res) => {
       });
     })
     .catch((err) => console.log(err));
+});
+
+// @route POST api/edit/news
+// @desc edit news
+router.put("/edit/news", async (req, res) => {
+  console.log("edit news api hit");
+
+  try {
+    const response = await News.findOneAndUpdate(
+      { _id: req.query.newsId },
+      {
+        name: req.body.name,
+        description: req.body.description,
+        content: req.body.content,
+      }
+    );
+    console.log(response)
+
+    res.status(200).send({
+      status: "ok",
+    });
+  } catch (err) {
+    console.log("some error occurred: ", err);
+  }
 });
 
 module.exports = router;

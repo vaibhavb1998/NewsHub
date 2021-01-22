@@ -1,6 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import { Layout, Menu, Form, Button, Select, Typography, Card, Image, Dropdown, List, Modal, message, DatePicker } from 'antd';
-import _, { set } from 'lodash'
+import React, { useState, useEffect } from "react";
+import {
+  Layout,
+  Menu,
+  Form,
+  Button,
+  Select,
+  Typography,
+  Card,
+  Image,
+  Dropdown,
+  List,
+  Modal,
+  message,
+  DatePicker,
+  Input,
+} from "antd";
+import _, { set } from "lodash";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -10,15 +25,18 @@ import {
   AlignRightOutlined,
   DownOutlined,
   UserOutlined,
-} from '@ant-design/icons';
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
-import axios from 'axios'
-import '../style/userNews.css'
+import axios from "axios";
+import "../style/userNews.css";
 
 const { Header, Sider, Content, Footer } = Layout;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { Title } = Typography;
+const { TextArea } = Input;
 
 const layout = {
   labelCol: { span: 8 },
@@ -30,9 +48,9 @@ const tailLayout = {
 const rangeConfig = {
   rules: [
     {
-      type: 'array',
+      type: "array",
       required: true,
-      message: 'Please select time!',
+      message: "Please select time!",
     },
   ],
 };
@@ -46,54 +64,60 @@ const menu = (
 );
 
 const AdminNewsList = (props) => {
+  const [news, setNews] = useState([]);
+  const [category, setCategory] = useState("all-news");
+  const [language, setLanguage] = useState("english");
+  const [date, setDate] = useState([]);
+  const [collapsed, setCollapsed] = useState(false);
+  const [logoText, setLogoText] = useState("NewsHub");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalData, setModalData] = useState({});
+  const [modalNameValue, setModalNameValue] = useState("");
+  const [modalContentValue, setModalContentValue] = useState("");
+  const [modalDescriptionValue, setModalDescriptionValue] = useState("");
 
-  const [news, setNews] = useState([])
-  const [category, setCategory] = useState('all-news')
-  const [language, setLanguage] = useState('english')
-  const [date, setDate] = useState([])
-  const [collapsed, setCollapsed] = useState(false)
-  const [logoText, setLogoText] = useState("NewsHub")
-  const [modalVisible, setModalVisible] = useState(false)
-  const [modalData, setModalData] = useState({})
   let history = useHistory();
 
   const toggle = () => {
     if (!collapsed) {
-      setLogoText("NH")
+      setLogoText("NH");
     } else {
-      setLogoText("NewsHub")
+      setLogoText("NewsHub");
     }
-    setCollapsed(!collapsed)
+    setCollapsed(!collapsed);
   };
 
   const [form] = Form.useForm();
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/user/news?category=${category}&language=${language}&date=${date}`)
-      .then(res => {
-        setNews(res.data.data)
-        console.log(res.data)
+    axios
+      .get(
+        `http://localhost:5000/api/user/news?category=${category}&language=${language}&date=${date}`
+      )
+      .then((res) => {
+        setNews(res.data.data);
+        console.log(res.data);
       })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [category, language, date])
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [category, language, date]);
 
   const handleCategoryChange = (e) => {
-    console.log(e.key)
-    setCategory(e.key)
-  }
+    console.log(e.key);
+    setCategory(e.key);
+  };
 
   const handleLanguageChange = (e) => {
-    console.log(e.key)
-    setLanguage(e.key)
-  }
+    console.log(e.key);
+    setLanguage(e.key);
+  };
 
   const handleDateChange = (value, dateString) => {
-    setDate(value)
-  }
+    setDate(value);
+  };
 
-  const onFinish = values => {
+  const onFinish = (values) => {
     console.log(values);
   };
 
@@ -104,39 +128,25 @@ const AdminNewsList = (props) => {
   const categoryMenu = (
     <Menu onClick={handleCategoryChange} defaultActiveFirst>
       <Menu.Item key="all-news">
-        <a target="_blank" >
-          All News
-      </a>
+        <a target="_blank">All News</a>
       </Menu.Item>
       <Menu.Item key="national">
-        <a target="_blank" >
-          National
-      </a>
+        <a target="_blank">National</a>
       </Menu.Item>
       <Menu.Item key="international">
-        <a target="_blank" >
-          International
-      </a>
+        <a target="_blank">International</a>
       </Menu.Item>
       <Menu.Item key="technology">
-        <a target="_blank" >
-        Science & Technology
-      </a>
+        <a target="_blank">Science & Technology</a>
       </Menu.Item>
       <Menu.Item key="politics">
-        <a target="_blank" >
-          Politics
-      </a>
+        <a target="_blank">Politics</a>
       </Menu.Item>
       <Menu.Item key="devotional">
-        <a target="_blank" >
-          Devotional
-      </a>
+        <a target="_blank">Devotional</a>
       </Menu.Item>
       <Menu.Item key="sports">
-        <a target="_blank" >
-          Sports
-      </a>
+        <a target="_blank">Sports</a>
       </Menu.Item>
     </Menu>
   );
@@ -144,72 +154,127 @@ const AdminNewsList = (props) => {
   const languageMenu = (
     <Menu onClick={handleLanguageChange} defaultActiveFirst>
       <Menu.Item key="english">
-        <a target="_blank" >
-          English
-      </a>
+        <a target="_blank">English</a>
       </Menu.Item>
       <Menu.Item key="hindi">
-        <a target="_blank" >
-          Hindi
-      </a>
+        <a target="_blank">Hindi</a>
       </Menu.Item>
       <Menu.Item key="kannada">
-        <a target="_blank" >
-          Kannada
-      </a>
+        <a target="_blank">Kannada</a>
       </Menu.Item>
     </Menu>
   );
 
   const handleNewsClick = () => {
-    console.log('here 5', modalData)
-    props.history.push('/admin/news-page', {
+    console.log("here 5", modalData);
+    props.history.push("/admin/news-page", {
       newsData: modalData,
-    })
-  }
+    });
+  };
 
   const handleNewsDelete = () => {
     if (!_.isEmpty(modalData)) {
-      axios.delete(`http://localhost:5000/api/admin/delete/news?newsId=${modalData._id}`)
-        .then(res => {
-          message.success("News deleted successfully")
-          window.location.reload()
+      axios
+        .delete(
+          `http://localhost:5000/api/admin/delete/news?newsId=${modalData._id}`
+        )
+        .then((res) => {
+          message.success("News deleted successfully");
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         })
-        .catch(err => {
-          console.log(err)
-          message.error("Some error happened")
-        })
+        .catch((err) => {
+          console.log(err);
+          message.error("Some error happened");
+        });
     }
-  }
+  };
+
+  const handleNewsEdit = (e) => {
+    e.preventDefault();
+    if (
+      !_.isEmpty(modalNameValue) &&
+      !_.isEmpty(modalDescriptionValue) &&
+      !_.isEmpty(modalContentValue)
+    ) {
+      const bodyValue = {
+        name: modalNameValue,
+        content: modalContentValue,
+        description: modalDescriptionValue,
+      };
+
+      window.console.log("body value: ", bodyValue);
+      window.console.log("news Id: ", modalData._id);
+
+      axios
+        .put(
+          `http://localhost:5000/api/admin/edit/news?newsId=${modalData._id}`,
+          bodyValue
+        )
+        .then((res) => {
+          message.success("News updated successfully");
+          setModalVisible(false);
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        })
+        .catch((err) => {
+          console.log(err);
+          message.error("Some error happened");
+        });
+    }
+  };
 
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo">
-          {logoText}
-        </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" icon={<FileSyncOutlined />} onClick={() => history.push('/admin/news')}>
+        <div className="logo">{logoText}</div>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+          <Menu.Item
+            key="1"
+            icon={<FileSyncOutlined />}
+            onClick={() => history.push("/admin/news")}
+          >
             Manage News
           </Menu.Item>
-          <Menu.Item key="2" icon={<FileAddOutlined />} onClick={() => history.push('/admin/add/news')}>
+          <Menu.Item
+            key="2"
+            icon={<FileAddOutlined />}
+            onClick={() => history.push("/admin/add/news")}
+          >
             Add News
           </Menu.Item>
-          <Menu.Item key="3" icon={<UsergroupAddOutlined />} onClick={() => history.push('/admin/add/user')}>
+          <Menu.Item
+            key="3"
+            icon={<UsergroupAddOutlined />}
+            onClick={() => history.push("/admin/add/user")}
+          >
             Create New Admin
           </Menu.Item>
         </Menu>
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }}>
-          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
-            onClick: toggle,
-          })}
-          <div style={{ float: "right", paddingRight: "40px", marginTop: "10px" }}>
-            <Dropdown overlay={menu} trigger={['click']}>
-              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                <UserOutlined style={{ color: "white", fontSize: "30px" }} /><DownOutlined style={{ color: "white", fontSize: "15px" }} />
+          {React.createElement(
+            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+            {
+              className: "trigger",
+              onClick: toggle,
+            }
+          )}
+          <div
+            style={{ float: "right", paddingRight: "40px", marginTop: "10px" }}
+          >
+            <Dropdown overlay={menu} trigger={["click"]}>
+              <a
+                className="ant-dropdown-link"
+                onClick={(e) => e.preventDefault()}
+              >
+                <UserOutlined style={{ color: "white", fontSize: "30px" }} />
+                <DownOutlined style={{ color: "white", fontSize: "15px" }} />
               </a>
             </Dropdown>
           </div>
@@ -217,13 +282,21 @@ const AdminNewsList = (props) => {
         <Content
           className="site-layout-background"
           style={{
-            margin: '24px 16px',
+            margin: "24px 16px",
             padding: 24,
             minHeight: 280,
           }}
         >
-          <Title level={2} style={{ marginBottom: "20px" }}>News</Title>
-          <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+          <Title level={2} style={{ marginBottom: "20px" }}>
+            News
+          </Title>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
             <Dropdown overlay={categoryMenu}>
               <Button style={{ marginBottom: "50px" }}>
                 Select category <AlignRightOutlined />
@@ -236,7 +309,11 @@ const AdminNewsList = (props) => {
               </Button>
             </Dropdown>
 
-            <RangePicker onChange={handleDateChange} format='DD/MM/YYYY' style={{ alignSelf: "end" }} />
+            <RangePicker
+              onChange={handleDateChange}
+              format="DD/MM/YYYY"
+              style={{ alignSelf: "end" }}
+            />
           </div>
           <div style={{ marginBottom: "50px" }}>
             <b>Current selection:</b> Category: {category}, Language: {language}
@@ -244,14 +321,33 @@ const AdminNewsList = (props) => {
           <List
             grid={{ gutter: 16, column: 3 }}
             dataSource={news}
-            renderItem={item => (
-              <List.Item
-                onClick={() => {
-                  props.history.push('/admin/news-page', {
-                    newsData: item,
-                  })
-                }}>
-                <Card title={item.name} style={{ height: "400px" }}>
+            renderItem={(item) => (
+              <List.Item>
+                <Card
+                  title={item.name}
+                  style={{ height: "450px" }}
+                  style={{ minHeight: "100%", position: "relative" }}
+                  onClick={() => {
+                    props.history.push("/admin/news-page", {
+                      newsData: item,
+                    });
+                  }}
+                  s
+                  actions={[
+                    <EditOutlined
+                      key="edit"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log(item);
+                        setModalNameValue(item.name);
+                        setModalDescriptionValue(item.description);
+                        setModalContentValue(item.content);
+                        setModalData(item);
+                        setModalVisible(true);
+                      }}
+                    />,
+                  ]}
+                >
                   <div>
                     <Image
                       width="100%"
@@ -275,18 +371,28 @@ const AdminNewsList = (props) => {
             maskClosable={false}
             width="70vw"
             closable={false}
+            footer={[
+              <Button key="delete" type="danger" onClick={handleNewsDelete}>
+                <DeleteOutlined /> Delete
+              </Button>,
+              <Button key="close" onClick={() => setModalVisible(false)}>
+                Close
+              </Button>,
+            ]}
           >
-            <div style={{ fontSize: "18px" }}>
+            <div style={{ fontSize: "14px" }}>
               <p>Name: {modalData.name}</p>
               <p>Description: {modalData.description}</p>
               <p>Content: {modalData.content}</p>
             </div>
           </Modal>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>&copy; Copyright 2020 NewsHub</Footer>
+        <Footer style={{ textAlign: "center" }}>
+          &copy; Copyright 2020 NewsHub
+        </Footer>
       </Layout>
-    </Layout >
+    </Layout>
   );
-}
+};
 
 export default AdminNewsList;
