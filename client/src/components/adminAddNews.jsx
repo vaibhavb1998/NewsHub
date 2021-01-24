@@ -19,8 +19,8 @@ const { Option } = Select;
 const { Title } = Typography;
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 8 },
+  labelCol: { span: 6 },
+  wrapperCol: { span: 10 },
 };
 const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
@@ -179,9 +179,11 @@ const AdminNews = () => {
               rules={[{ message: 'Please select news language!' }]}
             >
               <Radio.Group>
+                <Radio value="bengali">Bengali</Radio>
                 <Radio value="english">English</Radio>
                 <Radio value="hindi">Hindi</Radio>
                 <Radio value="kannada">Kannada</Radio>
+                <Radio value="urdu">Urdu</Radio>
               </Radio.Group>
             </Form.Item>
 

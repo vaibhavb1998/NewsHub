@@ -75,6 +75,10 @@ const AdminNewsList = (props) => {
   const [modalNameValue, setModalNameValue] = useState("");
   const [modalContentValue, setModalContentValue] = useState("");
   const [modalDescriptionValue, setModalDescriptionValue] = useState("");
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [updateNewsTitle, setUpdateNewsTitle] = useState("");
+  const [updateNewsDescription, setUpdateNewsDescription] = useState("");
+  const [updateNewsContent, setUpdateNewsContent] = useState("");
 
   let history = useHistory();
 
@@ -153,6 +157,9 @@ const AdminNewsList = (props) => {
 
   const languageMenu = (
     <Menu onClick={handleLanguageChange} defaultActiveFirst>
+      <Menu.Item key="bengali">
+        <a target="_blank">Bengali</a>
+      </Menu.Item>
       <Menu.Item key="english">
         <a target="_blank">English</a>
       </Menu.Item>
@@ -161,6 +168,9 @@ const AdminNewsList = (props) => {
       </Menu.Item>
       <Menu.Item key="kannada">
         <a target="_blank">Kannada</a>
+      </Menu.Item>
+      <Menu.Item key="urdu">
+        <a target="_blank">Urdu</a>
       </Menu.Item>
     </Menu>
   );
@@ -192,17 +202,21 @@ const AdminNewsList = (props) => {
     }
   };
 
-  const handleNewsEdit = (e) => {
-    e.preventDefault();
+  const handleNewsEdit = () => {
+    // e.preventDefault();
+    console.log("updateNewsTitle", updateNewsTitle);
+    console.log("updateNewsDescription", updateNewsDescription);
+    console.log("updateNewsContent", updateNewsContent);
+
     if (
-      !_.isEmpty(modalNameValue) &&
-      !_.isEmpty(modalDescriptionValue) &&
-      !_.isEmpty(modalContentValue)
+      !_.isEmpty(updateNewsTitle) &&
+      !_.isEmpty(updateNewsDescription) &&
+      !_.isEmpty(updateNewsContent)
     ) {
       const bodyValue = {
-        name: modalNameValue,
-        content: modalContentValue,
-        description: modalDescriptionValue,
+        name: updateNewsTitle,
+        content: updateNewsDescription,
+        description: updateNewsContent,
       };
 
       window.console.log("body value: ", bodyValue);
@@ -334,6 +348,18 @@ const AdminNewsList = (props) => {
                   }}
                   s
                   actions={[
+                    <DeleteOutlined
+                      key="update"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log(item);
+                        setModalNameValue(item.name);
+                        setModalDescriptionValue(item.description);
+                        setModalContentValue(item.content);
+                        setModalData(item);
+                        setModalVisible(true);
+                      }}
+                    />,
                     <EditOutlined
                       key="edit"
                       onClick={(e) => {
@@ -343,7 +369,10 @@ const AdminNewsList = (props) => {
                         setModalDescriptionValue(item.description);
                         setModalContentValue(item.content);
                         setModalData(item);
-                        setModalVisible(true);
+                        setEditModalVisible(true);
+                        setUpdateNewsTitle(item.name);
+                        setUpdateNewsDescription(item.description);
+                        setUpdateNewsContent(item.content);
                       }}
                     />,
                   ]}
@@ -384,6 +413,44 @@ const AdminNewsList = (props) => {
               <p>Name: {modalData.name}</p>
               <p>Description: {modalData.description}</p>
               <p>Content: {modalData.content}</p>
+            </div>
+          </Modal>
+          <Modal
+            title={<span style={{ fontSize: "24px" }}>{modalData.name}</span>}
+            visible={editModalVisible}
+            onOk={() => setEditModalVisible(false)}
+            onCancel={() => handleNewsEdit()}
+            okText="Close"
+            cancelText="Delete"
+            centered
+            maskClosable={false}
+            width="70vw"
+            closable={false}
+            footer={[
+              <Button key="edit" type="primary" onClick={handleNewsEdit}>
+                <EditOutlined /> Update
+              </Button>,
+              <Button key="close" onClick={() => setEditModalVisible(false)}>
+                Close
+              </Button>,
+            ]}
+          >
+            <div style={{ fontSize: "14px" }}>
+              Name:{" "}
+              <TextArea
+                defaultValue={modalData.name}
+                onChange={(e) => setUpdateNewsTitle(e.target.value)}
+              />
+              Description:{" "}
+              <TextArea
+                defaultValue={modalData.description}
+                onChange={(e) => setUpdateNewsDescription(e.target.value)}
+              />
+              Content:{" "}
+              <TextArea
+                defaultValue={modalData.content}
+                onChange={(e) => setUpdateNewsContent(e.target.value)}
+              />
             </div>
           </Modal>
         </Content>
